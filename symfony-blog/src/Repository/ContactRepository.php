@@ -4,11 +4,11 @@ namespace App\Repository;
 
 use App\Entity\Contact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Contact>
- *
  * @method Contact|null find($id, $lockMode = null, $lockVersion = null)
  * @method Contact|null findOneBy(array $criteria, array $orderBy = null)
  * @method Contact[]    findAll()
@@ -21,46 +21,56 @@ class ContactRepository extends ServiceEntityRepository
         parent::__construct($registry, Contact::class);
     }
 
-    public function save(Contact $entity, bool $flush = false): void
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function add(Contact $entity, bool $flush = true): void
     {
-        $this->getEntityManager()->persist($entity);
-
+        $this->_em->persist($entity);
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->_em->flush();
         }
     }
 
-    public function remove(Contact $entity, bool $flush = false): void
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function remove(Contact $entity, bool $flush = true): void
     {
-        $this->getEntityManager()->remove($entity);
-
+        $this->_em->remove($entity);
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->_em->flush();
         }
     }
 
-//    /**
-//     * @return Contact[] Returns an array of Contact objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    // /**
+    //  * @return Contact[] Returns an array of Contact objects
+    //  */
+    /*
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('c.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    */
 
-//    public function findOneBySomeField($value): ?Contact
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /*
+    public function findOneBySomeField($value): ?Contact
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    */
 }
