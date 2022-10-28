@@ -14,13 +14,22 @@ class Contact
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    /**
+    * @ORM\Column(type="string", length=255)
+    * @Assert\NotBlank
+    * (message="Field `First Name` is mandatory")
+    */
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 255)]
+    /**
+    * @ORM\Column(type="string", length=255)
+    * @Assert\NotBlank()
+    * @Assert\Email
+    * (message=" is not a valid email")
+    */
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
